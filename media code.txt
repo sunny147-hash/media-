@@ -1,0 +1,26 @@
+# 导入需要的库
+import tweepy
+import pandas as pd
+
+# 定义 Twitter API 的认证信息
+consumer_key = 'YOUR_CONSUMER_KEY'
+consumer_secret = 'YOUR_CONSUMER_SECRET'
+access_token = 'YOUR_ACCESS_TOKEN'
+access_token_secret = 'YOUR_ACCESS_TOKEN_SECRET'
+
+# 认证并创建 API 对象
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tweepy.API(auth)
+
+# 定义函数获取用户的最新推文
+def get_tweets(username):
+    tweets = api.user_timeline(screen_name=username, count=10, tweet_mode='extended')
+    df = pd.DataFrame([{'created_at': tweet.created_at, 'text': tweet.full_text} for tweet in tweets])
+    return df
+
+# 使用示例
+if __name__ == "__main__":
+    username = 'twitter_username'
+    tweets_df = get_tweets(username)
+    print(tweets_df)
